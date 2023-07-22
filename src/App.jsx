@@ -12,15 +12,18 @@ const App = () => {
     { id: 3, name: 'Gum', price: 30 },
     { id: 4, name: 'Batteries', price: 40 },
     { id: 5, name: 'Chocolate', price: 50 },
-
   ];
 
   const [cartItems, setCartItems] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
   const addToCart = (product) => {
-    const updatedCart = [...cartItems, product];
-    setCartItems(updatedCart);
+    if (cartItems.find((item) => item.id === product.id)) {
+      onIncrementQuantity(product.id);
+    } else {
+      const updatedCart = [...cartItems, product];
+      setCartItems(updatedCart);
+    }
   };
 
   const removeFromCart = (productId) => {
@@ -28,16 +31,32 @@ const App = () => {
     setCartItems(updatedCart);
   };
 
-  const updateQuantity = (productId) => {
+  const onIncrementQuantity = (productId) => {
     const updatedCart = cartItems.map((item) =>
       item.id === productId ? { ...item, quantity: item.quantity === undefined ? 1 : item.quantity +1 } : item
     );
     setCartItems(updatedCart);
   };
 
+  const onDecrementQuantity = (productId) => {
+    if (cartItems.find((item) => item.id === productId && item.quantity === 1)) {
+      removeFromCart(productId);
+    } else {
+      const updatedCart = cartItems.map((item) =>
+      item.id === productId ? { ...item, quantity: item.quantity === undefined ? 1 : item.quantity -1 } : item
+      );
+      setCartItems(updatedCart);
+    }
+  }
+
   const addToWishlist = (product) => {
-    const updatedWishlist = [...wishlist, product];
-    setWishlist(updatedWishlist);
+    if (!wishlist.find((item) => item.id === product.id)) {
+      const updatedWishlist = [...wishlist, product];
+      setWishlist(updatedWishlist);
+      
+    } else {
+      alert('Item already in wishlist');
+    }
   };
 
   const moveToWishlist = (product) => {
@@ -69,7 +88,7 @@ const App = () => {
         />
       ))}
       </div>
-      <Cart cartItems={cartItems} removeFromCart={removeFromCart} updateQuantity={updateQuantity} moveToWishlist={moveToWishlist} />
+      <Cart cartItems={cartItems} removeFromCart={removeFromCart} onIncrementQuantity={onIncrementQuantity} onDecrementQuantity={onDecrementQuantity} moveToWishlist={moveToWishlist} />
       <Wishlist wishlist={wishlist} removeFromWishlist={removeFromWishlist} moveToCart={moveToCart} />
     </div>
   );

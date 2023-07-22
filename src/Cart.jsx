@@ -2,7 +2,7 @@
 // import React, { useState } from 'react';
 import CartItem from './CartItem';
 
-const Cart = ({ cartItems, removeFromCart, updateQuantity, moveToWishlist }) => {
+const Cart = ({ cartItems, removeFromCart, onIncrementQuantity, onDecrementQuantity, moveToWishlist }) => {
   return (
     <div className='cart'>
       <h2>Cart</h2>
@@ -14,7 +14,8 @@ const Cart = ({ cartItems, removeFromCart, updateQuantity, moveToWishlist }) => 
           key={item.id}
           item={item}
           onRemove={removeFromCart}
-          onUpdateQuantity={updateQuantity}
+          onIncrementQuantity={onIncrementQuantity}
+          onDecrementQuantity={onDecrementQuantity}
           moveToWishlist={moveToWishlist}
         />
       ))}
